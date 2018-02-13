@@ -3,15 +3,31 @@ class HeapMax():
     def __init__(self):
         self.heap = []
 
+    # Method for sort a array using heap in O(n log n)
+    # Given an unsorted array its return a sorted array
+    def heap_sort(self, arr):
+        self.heap = []
+        for i in arr:
+            self.insert(i)
+        for j in range(len(arr) - 1, -1, -1):
+            arr[j] = self.extract_max()
+
+        return arr
+
+    # Turn a array into a heap
+    def build_heap(self, arr):
+        self.heap = arr
+        for i in range(len(arr) - 1, -1, -1):
+            self.sift_down(i)
+        return self.heap
+
     # Get the max element without remove them
     def get_max(self):
         return self.heap[0]
 
     # return the parent position
     def parent(self, position):
-        if(position % 2) == 0:
-            return (position // 2) - 1
-        return position // 2
+        return (position - 1) // 2
     # return the left child
     def left_child(self, position):
         return 2 * position + 1
@@ -31,9 +47,10 @@ class HeapMax():
         left = self.left_child(position)
         right = self.righ_child(position)
         size = len(self.heap)
-        if ((left and right) < size):
+        if left < size:
             if(self.heap[left] > self.heap[max_index]):
                 max_index = left
+        if right < size:
             if(self.heap[right] > self.heap[max_index]):
                 max_index = right
 
@@ -50,8 +67,9 @@ class HeapMax():
     # Extract the maximum element and replace the root with the last leaf
     def extract_max(self):
         max_element = self.heap[0]
-        self.heap[0] = self.heap.pop()
-        self.sift_down(0)
+        if len(self.heap) > 1:
+            self.heap[0] = self.heap.pop()
+            self.sift_down(0)
         return max_element
 
     # change the priority of an element and let the changed element sift up or down
@@ -98,3 +116,9 @@ print(h.heap)
 
 h.change_priority(2, 7)
 print(h.heap)
+
+arr = h.heap_sort([3,2,1,5,34,3,23,2,3,4,5,6,77,5,443,3,5342,535])
+print(arr)
+new_heap = [1,3,5,3,2,2,45,3,3,5,3,22]
+HeapMax().build_heap(new_heap)
+print(new_heap)
